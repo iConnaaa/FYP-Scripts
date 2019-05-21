@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type = "text/javascript">
+        function WebSocketOne() {
+        var websocket = new WebSocket('ws://ditto:ditto@localhost:8080/ws/2');
+            websocket.onmessage = function(event){
+                console.log("Event Registered: " +event.data);
+                var Response = JSON.parse(event.data);
+                if (Response.topic === "thing/a-drill/things/live/messages/shutDown") {
+                    var responseMessage = createTextResponse(Response, "Drill has received shut down request", 200);
+                    websocket.reply(responseMessage);
+                }
+            }
+
+            websocket.reply = function(message) {
+                console.log(JSON.stringify(message));
+                websocket.send(JSON.stringify(message));
+            }
+
+            websocket.onopen = function(event) {
+                console.log("Socket open");
+                websocket.send('START-SEND-EVENTS');
+            }
+
+            createTextResponse = function(originalMessage, payload, statusCode) {
+                var topic = originalMessage.topic;
+                var correlationID = originalMessage.headers["correlation-id"];
+                var outboxPath = originalMessage.path.replace("inbox", "outbox");
+                return {
+                    "topic": topic,
+                    "headers": {
+                        "correlation-id": correlationID,
+                        "content-type": "text/plain"
+                        },
+                    "path": outboxPath,
+                    "status" : statusCode,
+                    "value": payload
+                };
+            };
+        }
+            </script>
+    </head>
+    <body>
+        <a href = "javascript:WebSocketOne()">Run WebSocket</a>
+    </body>
+</html>
