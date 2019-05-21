@@ -1,6 +1,6 @@
 # Final Year Project
 
-One Paragraph of project description goes here
+This is the repository containing the source code for the WebSocket Listener and the C++ Code that generates the dummy data
 
 ## Getting Started
 
