@@ -1,4 +1,4 @@
-# Project Title
+# Final Year Project
 
 One Paragraph of project description goes here
 
